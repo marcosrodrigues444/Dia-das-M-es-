@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Feliz Dia das Mães!</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(to top, #ffdee9, #b5fffc);
+      min-height: 100vh;
+      overflow-x: hidden;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow-y: auto;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 3rem;
+      color: #ff4081;
+      text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+      margin: 20px 0 10px;
+      animation: textPulse 2s infinite ease-in-out;
+      text-align: center;
+    }
+
+    p {
+      font-size: 1.5rem;
+      color: #333;
+      max-width: 700px;
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      padding: 0 15px;
+      animation: fadeIn 3s ease forwards;
+    }
+
+    @keyframes textPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+    }
+
+    .carousel-container {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      margin-bottom: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      max-width: 90vw;
+    }
+
+    .carousel-slides {
+      display: flex;
+      transition: transform 0.5s ease-in-out;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    .carousel-slides img {
+      height: auto;
+      width: auto;
+      max-width: none;
+      flex-shrink: 0;
+      border-radius: 20px;
+      margin: 0 10px;
+    }
+
+    .carousel-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.7);
+      border: none;
+      font-size: 2rem;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 50%;
+      color: #ff4081;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      z-index: 10;
+    }
+
+    .carousel-button.left {
+      left: 10px;
+    }
+
+    .carousel-button.right {
+      right: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Feliz Dia das Mães! ❤️</h1>
+  <p>Hoje celebramos o amor mais puro e verdadeiro. Obrigado por tudo, mãe!</p>
+
+  <div class="carousel-container">
+    <div class="carousel-slides">
+      <img src="fotos/1.jpg" alt="Foto 1">
+      <img src="fotos/2.jpg" alt="Foto 2">
+      <img src="fotos/3.jpg" alt="Foto 3">
+      <img src="fotos/4.jpg" alt="Foto 4">
+      <img src="fotos/5.jpg" alt="Foto 5">
+      <img src="fotos/6.jpg" alt="Foto 6">
+      <img src="fotos/7.jpg" alt="Foto 7">
+      <img src="fotos/8.jpg" alt="Foto 8">
+      <img src="fotos/9.jpg" alt="Foto 9">
+      <img src="fotos/10.jpg" alt="Foto 10">
+      <img src="fotos/11.jpg" alt="Foto 11">
+      <img src="fotos/12.jpg" alt="Foto 12">
+      <img src="fotos/13.jpg" alt="Foto 13">
+      <img src="fotos/14.jpg" alt="Foto 14">
+    </div>
+    <button class="carousel-button left" onclick="prevSlide()">❮</button>
+    <button class="carousel-button right" onclick="nextSlide()">❯</button>
+  </div>
+
+  <canvas id="hearts"></canvas>
+
+  <script>
+    // Animação de corações
+    const canvas = document.getElementById('hearts');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const hearts = [];
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    class Heart {
+      constructor() {
+        this.x = random(0, canvas.width);
+        this.y = canvas.height + random(0, 100);
+        this.size = random(10, 30);
+        this.speed = random(1, 3);
+        this.opacity = random(0.5, 1);
+        this.angle = random(0, Math.PI * 2);
+        this.spin = random(0.01, 0.03);
+      }
+
+      draw() {
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.angle);
+        ctx.globalAlpha = this.opacity;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.bezierCurveTo(0, -this.size / 2, -this.size, -this.size / 2, -this.size, 0);
+        ctx.bezierCurveTo(-this.size, this.size / 1.5, 0, this.size, 0, this.size * 1.5);
+        ctx.bezierCurveTo(0, this.size, this.size, this.size / 1.5, this.size, 0);
+        ctx.bezierCurveTo(this.size, -this.size / 2, 0, -this.size / 2, 0, 0);
+        ctx.fillStyle = `rgba(255, 64, 129, ${this.opacity})`;
+        ctx.fill();
+        ctx.restore();
+      }
+
+      update() {
+        this.y -= this.speed;
+        this.angle += this.spin;
+        if (this.y < -50) {
+          this.x = random(0, canvas.width);
+          this.y = canvas.height + random(0, 100);
+        }
+        this.draw();
+      }
+    }
+
+    function init() {
+      for (let i = 0; i < 70; i++) {
+        hearts.push(new Heart());
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      hearts.forEach(heart => heart.update());
+      requestAnimationFrame(animate);
+    }
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    init();
+    animate();
+
+    // Carrossel JS
+    const slides = document.querySelector('.carousel-slides');
+    const images = document.querySelectorAll('.carousel-slides img');
+    let index = 0;
+
+    function showSlide() {
+      let offset = 0;
+      for (let i = 0; i < index; i++) {
+        offset += images[i].offsetWidth + 20; // 20px de margem (10 de cada lado)
+      }
+      slides.style.transform = `translateX(-${offset}px)`;
+    }
+
+    function nextSlide() {
+      index = (index + 1) % images.length;
+      showSlide();
+    }
+
+    function prevSlide() {
+      index = (index - 1 + images.length) % images.length;
+      showSlide();
+    }
+  </script>
+
+</body>
+</html>
